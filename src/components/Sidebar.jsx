@@ -3,8 +3,7 @@ import { BiMenu } from "react-icons/bi";
 import { FaUserMd, FaUserCircle, FaUserNurse, FaBloggerB, FaWallet, FaTicketAlt, FaVideo } from "react-icons/fa";
 import { CgPill } from "react-icons/cg";
 import { GiTicket } from "react-icons/gi";
-import { useNavigate, useNavigation } from "react-router-dom";
-import { RiHome2Line } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 import { TbHomeFilled } from "react-icons/tb";
 
 const Sidebar = () => {
