@@ -4,6 +4,8 @@ import { FaUserMd, FaUserCircle, FaUserNurse, FaBloggerB, FaWallet, FaTicketAlt,
 import { CgPill } from "react-icons/cg";
 import { GiTicket } from "react-icons/gi";
 import { useNavigate, useNavigation } from "react-router-dom";
+import { RiHome2Line } from "react-icons/ri";
+import { TbHomeFilled } from "react-icons/tb";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,8 +14,8 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const menuItems = [
-    { name: "Manage Doctor", icon: <FaUserMd />, path: "/doctor/manage" },
-    { name: "Manage User", icon: <FaUserCircle />, path: "/user/manage" },
+    { name: "Home", icon: <TbHomeFilled />, path: "/" },
+    { name: "Manage User", icon: <FaUserCircle />, path: "/user" },
     { name: "Manage Employee", icon: <FaUserNurse />, path: "/employee/manage" },
     { name: "Manage Blogs", icon: <FaBloggerB />, path: "/blogs" },
     { name: "Manage Store", icon: <CgPill />, path: "/store" },
