@@ -15,14 +15,14 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: "Home", icon: <TbHomeFilled />, path: "/" },
-    { name: "Manage User", icon: <FaUserCircle />, path: "/user" },
-    { name: "Manage Employee", icon: <FaUserNurse />, path: "/employee/manage" },
-    { name: "Manage Blogs", icon: <FaBloggerB />, path: "/blogs" },
-    { name: "Manage Store", icon: <CgPill />, path: "/store" },
-    { name: "Manage Wallet", icon: <FaWallet />, path: "/wallet/manage" },
-    { name: "Manage Coupons", icon: <GiTicket />, path: "/coupon/manage" },
-    { name: "Manage Tickets", icon: <FaTicketAlt />, path: "/ticket/manage" },
-    { name: "Manage Meeting", icon: <FaVideo />, path: "/meeting/manage" },
+    { name: "User", icon: <FaUserCircle />, path: "/user" },
+    { name: "Employee", icon: <FaUserNurse />, path: "/employee/manage" },
+    { name: "Blogs", icon: <FaBloggerB />, path: "/blogs" },
+    { name: "Store", icon: <CgPill />, path: "/store" },
+    { name: "Wallet", icon: <FaWallet />, path: "/wallet/manage" },
+    { name: "Coupons", icon: <GiTicket />, path: "/coupon/manage" },
+    { name: "Tickets", icon: <FaTicketAlt />, path: "/ticket/manage" },
+    { name: "Meeting", icon: <FaVideo />, path: "/meeting/manage" },
   ];
 
   // Effect to delay the appearance of text
@@ -54,7 +54,7 @@ const Sidebar = () => {
       <div
         ref={sidebarRef}
         className={`fixed bg-gray-800 text-white  transition-all duration-150 ease-in-out z-50 ${
-          isOpen ? "w-64 lg:rounded-md h-screen lg:h-[95vh] top-0 left-0 lg:top-5 lg:left-3" : "w-16 h-fit lg:h-[95vh] lg:rounded-full top-2 left-2 rounded-xl lg:top-5 lg:left-3"
+          isOpen ? "w-56  lg:rounded-md h-screen lg:h-[95vh] top-0 left-0 lg:top-5 lg:left-3" : "w-16 h-fit lg:h-[95vh] lg:rounded-full top-2 left-2 rounded-xl lg:top-5 lg:left-3"
         }`}
       >
         <div className="flex flex-col lg:mt-3 h-full">
@@ -68,7 +68,7 @@ const Sidebar = () => {
             </button>
           </div>
 
-          {/* Menu Items */}
+
           <nav className={`flex-1 mt-4 ${isOpen ? "lg:pl-2" : "hidden lg:block"}`}>
             {menuItems.map((item, index) => (
               <button
