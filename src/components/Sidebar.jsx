@@ -34,7 +34,6 @@ const Sidebar = () => {
     }
   }, [isOpen]);
 
-  // Close sidebar on clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -52,7 +51,7 @@ const Sidebar = () => {
       {/* Sidebar */}
       <div
         ref={sidebarRef}
-        className={`fixed bg-gray-800 text-white  transition-all duration-150 ease-in-out z-50 ${
+        className={`fixed bg-gray-900 text-white  transition-all duration-150 ease-in-out z-50 ${
           isOpen ? "w-56  lg:rounded-md h-screen lg:h-[95vh] top-0 left-0 lg:top-5 lg:left-3" : "w-16 h-fit lg:h-[95vh] lg:rounded-full top-2 left-2 rounded-xl lg:top-5 lg:left-3"
         }`}
       >
