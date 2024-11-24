@@ -47,8 +47,6 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="flex">
-      {/* Sidebar */}
       <div
         ref={sidebarRef}
         className={`fixed bg-gray-900 text-white  transition-all duration-150 ease-in-out z-50 ${
@@ -84,7 +82,6 @@ const Sidebar = () => {
           
         </div>
       </div>
-    </div>
   );
 };
 
