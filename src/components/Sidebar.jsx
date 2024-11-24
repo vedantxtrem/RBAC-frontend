@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BiMenu } from "react-icons/bi";
 import { FaUserMd, FaUserCircle, FaUserNurse, FaBloggerB, FaWallet, FaTicketAlt, FaVideo } from "react-icons/fa";
 import { CgPill } from "react-icons/cg";
 import { GiTicket } from "react-icons/gi";
+import { useNavigate, useNavigation } from "react-router-dom";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showText, setShowText] = useState(false); // New state for delayed text display
+  const sidebarRef = useRef(null);
+  const navigate = useNavigate();
 
   const menuItems = [
     { name: "Manage Doctor", icon: <FaUserMd />, path: "/doctor/manage" },
@@ -30,12 +33,26 @@ const Sidebar = () => {
     }
   }, [isOpen]);
 
+  // Close sidebar on clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="flex">
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 lg:top-5 lg:left-3 bg-gray-800 text-white  transition-all duration-150 ease-in-out z-50 ${
-          isOpen ? "w-64 lg:rounded-md h-screen lg:h-[95vh] " : "w-16 h-fit lg:h-[95vh] lg:rounded-full"
+        ref={sidebarRef}
+        className={`fixed bg-gray-800 text-white  transition-all duration-150 ease-in-out z-50 ${
+          isOpen ? "w-64 lg:rounded-md h-screen lg:h-[95vh] top-0 left-0 lg:top-5 lg:left-3" : "w-16 h-fit lg:h-[95vh] lg:rounded-full top-2 left-2 rounded-xl lg:top-5 lg:left-3"
         }`}
       >
         <div className="flex flex-col lg:mt-3 h-full">
@@ -47,25 +64,24 @@ const Sidebar = () => {
             >
               <BiMenu />
             </button>
-            {/* {showText && isOpen && <span className="text-md">Menu</span>} */}
-
           </div>
 
           {/* Menu Items */}
-          <nav className={` flex-1 mt-4 ${ isOpen? "lg:pl-2" : "hidden lg:block"} `}>
+          <nav className={`flex-1 mt-4 ${isOpen ? "lg:pl-2" : "hidden lg:block"}`}>
             {menuItems.map((item, index) => (
               <button
                 key={index}
-                onClick={() => (window.location.href = item.path)}
-                className={`flex items-center gap-4 w-full p-3 hover:bg-gray-700  transition-all text-gray-400 hover:text-gray-100 ${
+                onClick={() => (navigate(item.path))}
+                className={`flex items-center gap-4 w-full p-3 hover:bg-gray-700 transition-all text-gray-400 hover:text-gray-100 ${
                   isOpen ? "justify-start" : "justify-center"
-                }`}creen
+                }`}
               >
                 <span className="text-xl">{item.icon}</span>
                 {showText && isOpen && <span className="text-md">{item.name}</span>}
               </button>
             ))}
           </nav>
+          
         </div>
       </div>
     </div>
