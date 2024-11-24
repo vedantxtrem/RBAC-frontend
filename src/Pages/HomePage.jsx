@@ -1,6 +1,7 @@
 import React from "react";
 import { Doughnut, Bar } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from "chart.js";
+import profilepic from "../../public/assets/admin.jpeg"
 import HomeLayout from "../Layout/HomeLayout";
 import Calendar from "../components/Calendar";
 
@@ -72,7 +73,7 @@ const HomePage = () => {
           {/* Profile Card */}
           <div className="h-[400px] w-full lg:w-[25%] bg-white rounded-lg shadow p-4 flex flex-col items-center">
             <img
-              src="https://via.placeholder.com/100"
+              src="/assets/test.png"
               alt="Profile"
               className="rounded-full w-[200px] h-[200px] mb-4"
             />
@@ -116,7 +117,7 @@ const HomePage = () => {
         </div>
 
         {/* Onboarding Tasks & Calendar */}
-        <div className="w-full flex flex-wrap gap-6 mt-6 ">
+        <div className="w-[97%] flex flex-wrap gap-x-10 mt-6 ">
           {/* Onboarding Tasks */}
           <div className="w-full flex-1 md:w-[35%] bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Onboarding</h3>
