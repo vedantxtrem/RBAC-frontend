@@ -26,10 +26,10 @@ const Sidebar = () => {
     // { name: "Employee", icon: <FaUserNurse />, path: "/employee/manage" },
     // { name: "Blogs", icon: <FaBloggerB />, path: "/blogs" },
     // { name: "Store", icon: <CgPill />, path: "/store" },
-    // { name: "Wallet", icon: <FaWallet />, path: "/wallet/manage" },
+    { name: "Wallet", icon: <FaWallet />, path: "/wallet/manage" },
     // { name: "Coupons", icon: <GiTicket />, path: "/coupon/manage" },
     // { name: "Tickets", icon: <FaTicketAlt />, path: "/ticket/manage" },
-    // { name: "Meeting", icon: <FaVideo />, path: "/meeting/manage" },
+    { name: "Meeting", icon: <FaVideo />, path: "/meeting/manage" },
   ];
 
   // Effect to delay the appearance of text

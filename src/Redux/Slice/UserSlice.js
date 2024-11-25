@@ -24,6 +24,22 @@ export const getUserData = createAsyncThunk(
   }
 );
 
+export const useUpload = createAsyncThunk("uploadImage", async (data) => {
+  try {
+      const res =  axiosInstance.post("/user/upload",{
+        image : data
+      })
+      toast.promise(url,{
+        loading : "uploading",
+        success : "upload succfully",
+        error : "failed to upload",
+      })
+      return (await res).data;
+  } catch (error) {
+      toast.error(error.message);
+  }
+})
+
 const UserSlice = createSlice({
   name: "User",
   initialState,
