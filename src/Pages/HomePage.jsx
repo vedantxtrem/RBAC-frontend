@@ -104,8 +104,10 @@ const HomePage = () => {
         </div>
 
         <div className="w-full flex flex-wrap gap-6 px-3 lg:px-0">
+
           {/* Profile Card */}
           <div className="h-[400px] w-full lg:w-[25%] bg-white rounded-lg shadow p-4 flex flex-col items-center">
+            <h3 className="text-xl font-bold  mb-4 text-yellow-400">Admin Profile</h3>
             <img
               src={profilepic}
               alt="Profile"
@@ -118,7 +120,7 @@ const HomePage = () => {
 
           {/* Progress & Charts */}
           <div className="h-[400px] w-full lg:w-[45%] bg-white rounded-lg shadow px-6 py-4">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Progress</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Weakly User Onboarded</h3>
             {/* Chart Wrapper */}
             <div className="h-[85%]">
               <Bar
