@@ -25,16 +25,16 @@ const User = () => {
   };
 
   if (loading) {
-    return <div className="text-center text-gray-700">Loading...</div>;
+    return <HomeLayout><div className="w-screen h-screen flex flex-col justify-center items-center text-center text-gray-700">Loading...</div></HomeLayout> ;
   }
 
   if (error) {
-    return <div className="text-center text-red-500">{error}</div>;
+    return <HomeLayout><div className=" text-center text-red-500">{error}</div></HomeLayout>;
   }
 
   return (
     <HomeLayout>
-      <div className="mt-14 lg:ml-auto w-full lg:w-[94%] bg-white p-6 rounded-lg">
+      <div className="w-screen min-h-screen mt-14 lg:ml-auto bg-gray-100 lg:w-[94%]  p-6 rounded-lg">
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-gray-800">Manage User</h2>
           <p className="text-sm text-gray-500">This is the user data table</p>
