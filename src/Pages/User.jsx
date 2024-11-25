@@ -1,77 +1,80 @@
-import React from "react";
-import HomeLayout from "../Layout/HomeLayout";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserData } from "../Redux/Slice/UserSlice.js";
+import HomeLayout from "../Layout/HomeLayout.jsx";
 
 const User = () => {
-  const transactions = [
-    { description: "Payment from Bonnie Green", date: "Apr 23, 2021", amount: "$2300", status: "Completed" },
-    { description: "Payment refund to #00910", date: "Apr 23, 2021", amount: "-$670", status: "Completed" },
-    { description: "Payment failed from #087651", date: "Apr 18, 2021", amount: "$234", status: "Cancelled" },
-    { description: "Payment from Lana Byrd", date: "Apr 15, 2021", amount: "$5000", status: "In progress" },
-    { description: "Payment from Jese Leos", date: "Apr 15, 2021", amount: "$2300", status: "Completed" },
-    { description: "Payment from THEMESBERG LLC", date: "Apr 11, 2021", amount: "$560", status: "Completed" },
-    { description: "Payment from Lana Lysle", date: "Apr 6, 2021", amount: "$1437", status: "Completed" },
-    { description: "Payment to Joseph Mcfall", date: "Apr 1, 2021", amount: "$980", status: "Completed" },
-    { description: "Payment from Alphabet LLC", date: "Mar 23, 2021", amount: "$11,436", status: "In progress" },
-    { description: "Payment from Bonnie Green", date: "Mar 23, 2021", amount: "$560", status: "Completed" },
-  ];
+  const dispatch = useDispatch();
+  const { userData, loading, error } = useSelector((state) => state.User);
+
+  useEffect(() => {
+    dispatch(getUserData());
+  }, [dispatch]);
 
   const getStatusClass = (status) => {
-    switch (status) {
-      case "Completed":
+    switch (status?.toLowerCase()) {
+      case "active":
         return "bg-green-100 text-green-800";
-      case "Cancelled":
+      case "inactive":
         return "bg-red-100 text-red-800";
-      case "In progress":
-        return "bg-purple-100 text-purple-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
+  if (loading) {
+    return <div className="text-center text-gray-700">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center text-red-500">{error}</div>;
+  }
+
   return (
     <HomeLayout>
-        <div className=" mt-14 lg:ml-auto w-full lg:w-[94%] bg-white p-6 rounded-lg ">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">Manage User</h2>
-        <p className="text-sm text-gray-500">This is a list of latest transactions</p>
+      <div className="mt-14 lg:ml-auto w-full lg:w-[94%] bg-white p-6 rounded-lg">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-gray-800">Manage User</h2>
+          <p className="text-sm text-gray-500">This is the user data table</p>
+        </div>
+
+        <div className="overflow-x-auto">
+          {userData.length ? (
+            <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="text-left text-sm font-semibold text-gray-500 px-4 py-3">Name</th>
+                  <th className="text-left text-sm font-semibold text-gray-500 px-4 py-3">Email</th>
+                  <th className="text-left text-sm font-semibold text-gray-500 px-4 py-3">Role</th>
+                  <th className="text-left text-sm font-semibold text-gray-500 px-4 py-3">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {userData.map((it, index) => (
+                  <tr key={index} className="border-t border-gray-200">
+                    <td className="px-4 py-3 text-sm text-gray-700">{it?.user?.name}</td>
+                    <td className="px-4 py-3 text-sm text-gray-500">{it?.user?.email}</td>
+                    <td className="px-4 py-3 text-sm text-gray-500">{it?.user?.role}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`text-xs font-semibold px-2 py-1 rounded ${getStatusClass(
+                          it?.user?.status
+                        )}`}
+                      >
+                        {it?.user?.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div>No users found.</div>
+          )}
+        </div>
       </div>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="text-left text-sm font-semibold text-gray-500 px-4 py-3">Transaction</th>
-              <th className="text-left text-sm font-semibold text-gray-500 px-4 py-3">Date & Time</th>
-              <th className="text-left text-sm font-semibold text-gray-500 px-4 py-3">Amount</th>
-              <th className="text-left text-sm font-semibold text-gray-500 px-4 py-3">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions.map((transaction, index) => (
-              <tr key={index} className="border-t border-gray-200">
-                <td className="px-4 py-3 text-sm text-gray-700">{transaction.description}</td>
-                <td className="px-4 py-3 text-sm text-gray-500">{transaction.date}</td>
-                <td className="px-4 py-3 text-sm font-medium text-gray-700">{transaction.amount}</td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`text-xs font-semibold px-2 py-1 rounded ${getStatusClass(transaction.status)}`}
-                  >
-                    {transaction.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="mt-4 text-right">
-        <a
-          href="#"
-          className="text-purple-600 hover:underline text-sm font-medium"
-        >
-          View all
-        </a>
-      </div>
-    </div>
     </HomeLayout>
   );
 };

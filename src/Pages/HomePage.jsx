@@ -1,7 +1,7 @@
 import React from "react";
 import { Doughnut, Bar } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from "chart.js";
-import profilepic from "../../public/assets/admin.jpeg"
+import profilepic from "/assets/admin.jpeg"
 import HomeLayout from "../Layout/HomeLayout";
 import Calendar from "../components/Calendar";
 
@@ -73,7 +73,7 @@ const HomePage = () => {
           {/* Profile Card */}
           <div className="h-[400px] w-full lg:w-[25%] bg-white rounded-lg shadow p-4 flex flex-col items-center">
             <img
-              src="/assets/test.png"
+              src={profilepic}
               alt="Profile"
               className="rounded-full w-[200px] h-[200px] mb-4"
             />

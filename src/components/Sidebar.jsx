@@ -60,12 +60,12 @@ const Sidebar = () => {
       className={`fixed bg-gray-900 text-white transition-all duration-200 ease-in-out z-50 ${
         isOpen
           ? "w-56 lg:rounded-md h-screen lg:h-[95vh] top-0 left-0 lg:top-5 lg:left-3"
-          : "w-16 h-fit lg:h-[95vh] lg:rounded-full top-2 left-2 rounded-xl lg:top-5 lg:left-3"
+          : "w-12 lg:w-16 h-fit lg:h-[95vh] lg:rounded-full top-2 left-2  rounded-xl lg:top-5 lg:left-3"
       }`}
     >
-      <div className="flex flex-col lg:mt-3 h-full">
+      <div className="w-full flex flex-col lg:mt-3 h-full">
         {/* Toggle Button */}
-        <div className="w-full flex items-center gap-4 p-4">
+        <div className={`w-full flex ${isOpen ? "" : "justify-center"}  items-center px-2 py-4`}>
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="text-3xl text-gray-400 hover:text-gray-100"
