@@ -47,7 +47,7 @@ const AddUserModal = ({ onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
       <div className="bg-amber-50 p-6 rounded-lg shadow-lg w-[90%] max-w-lg">
-        <h2 className="text-xl font-bold mb-4 text-center">Add User</h2>
+        <h2 className="text-xl font-bold mb-4 text-center whitespace-nowrap "> Add User</h2>
         <form onSubmit={handleSubmit} className="space-y-4 w-full flex flex-col justify-center items-center">
           {/* Photo Upload */}
           <div className="w-28 h-28 rounded-full">

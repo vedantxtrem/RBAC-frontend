@@ -55,7 +55,13 @@ const User = () => {
     return (
       <HomeLayout>
         <div className="w-screen h-screen flex flex-col justify-center items-center text-center text-gray-700">
-          Loading...
+        <div class="flex items-center justify-center h-screen">
+            <div class="relative">
+                <div class="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-300"></div>
+                <div class="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-amber-500 animate-spin">
+                </div>
+            </div>
+        </div>
         </div>
       </HomeLayout>
     );
@@ -71,16 +77,15 @@ const User = () => {
 
   return (
     <HomeLayout>
-      <div className="w-screen min-h-screen lg:ml-auto bg-gradient-to-l from-gray-100 via-amber-50 to-gray-100 lg:w-[94%] p-6 rounded-lg overflow-x-hidden">
+      <div className="w-screen min-h-screen lg:ml-auto bg-gradient-to-l from-gray-100 via-amber-50 to-gray-100 lg:w-[94%] p-3 lg:p-6 rounded-lg overflow-x-hidden">
         
-        <div className="w-full flex flex-col lg:flex-row justify-between items-center mb-4 lg:mt-8 lg:pr-10 gap-2">
-          <div className="mb-4">
+        <div className="w-full flex flex-col lg:flex-row justify-between items-center  mb-4 lg:mt-8 lg:pr-10 gap-5">
+          <div className="mt-5 ">
             <h2 className="text-2xl font-bold text-gray-800">Manage Users</h2>
-            {/* <p className="text-sm text-gray-500">This is the user data table</p> */}
           </div>
 
           {/* Search Input */}
-          <div className="h-12 flex justify-between gap-8">
+          <div className="w-full lg:w-fit h-10 lg:h-12 flex justify-between gap-2 lg:gap-8">
             <input
               type="text"
               value={searchQuery}
@@ -90,9 +95,9 @@ const User = () => {
             />
             <button
               onClick={toggleModal}
-              className="flex  items-center bg-amber-400 text-gray-900 px-4 py-2 rounded-lg hover:bg-amber-500"
+              className="flex  items-center bg-amber-400 text-gray-900 whitespace-nowrap px-4 py-2 rounded-lg hover:bg-amber-500"
             >
-              <FaUserPlus className="mr-2" />
+              <FaUserPlus className="mr-2 hidden" />
               Add User
             </button>
           </div>
@@ -173,21 +178,74 @@ const User = () => {
         )}
 
         {/* Pagination */}
-        <div className="mt-4 flex justify-center space-x-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              className={`px-4 py-2 rounded-lg ${
-                page === currentPage
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-800"
-              } hover:bg-blue-400`}
-            >
-              {page}
-            </button>
-          ))}
-        </div>
+        {/* Pagination */}
+<div className="mt-4 flex justify-center items-center space-x-1">
+  {/* First and Previous */}
+  <button
+    onClick={() => handlePageChange(1)}
+    disabled={currentPage === 1}
+    className={`px-3 py-1 rounded ${
+      currentPage === 1
+        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+    }`}
+  >
+    &laquo;
+  </button>
+  <button
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 1}
+    className={`px-3 py-1 rounded ${
+      currentPage === 1
+        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+    }`}
+  >
+    &lsaquo;
+  </button>
+
+  {/* Page Numbers */}
+  {Array.from({ length: totalPages }, (_, i) => i + 1)
+    .slice(Math.max(0, currentPage - 3), Math.min(currentPage + 2, totalPages))
+    .map((page) => (
+      <button
+        key={page}
+        onClick={() => handlePageChange(page)}
+        className={`px-3 py-1 rounded ${
+          page === currentPage
+            ? "bg-amber-400 text-white"
+            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+        }`}
+      >
+        {page}
+      </button>
+    ))}
+
+  {/* Next and Last */}
+  <button
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === totalPages}
+    className={`px-3 py-1 rounded ${
+      currentPage === totalPages
+        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+    }`}
+  >
+    &rsaquo;
+  </button>
+  <button
+    onClick={() => handlePageChange(totalPages)}
+    disabled={currentPage === totalPages}
+    className={`px-3 py-1 rounded ${
+      currentPage === totalPages
+        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+    }`}
+  >
+    &raquo;
+  </button>
+</div>
+
 
         {/* Add User Modal */}
         {isModalOpen && <AddUserModal onClose={toggleModal} />}
