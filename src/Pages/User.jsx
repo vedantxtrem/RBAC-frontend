@@ -8,11 +8,16 @@ import AddUserModal from "../components/AddUser.jsx";
 const User = () => {
   const dispatch = useDispatch();
   const { userData, loading, error } = useSelector((state) => state.User);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+
 
   const [searchQuery, setSearchQuery] = useState(""); // For search
   const [currentPage, setCurrentPage] = useState(1); // For pagination
-  const itemsPerPage = 10; // Number of items per page
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const itemsPerPage = 9; // Number of items per page
+
+  const onUserAdded = async () => {
+    await dispatch(getUserData());
+  }
 
   useEffect(() => {
     dispatch(getUserData());
@@ -30,7 +35,10 @@ const User = () => {
         return "bg-gray-100 text-gray-800";
     }
   };
-
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+  
   // Filtered data based on search query
   const filteredData = userData.filter((it) =>
     it?.user?.name?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -55,13 +63,13 @@ const User = () => {
     return (
       <HomeLayout>
         <div className="w-screen h-screen flex flex-col justify-center items-center text-center text-gray-700">
-        <div class="flex items-center justify-center h-screen">
+          <div class="flex items-center justify-center h-screen">
             <div class="relative">
-                <div class="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-300"></div>
-                <div class="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-amber-500 animate-spin">
-                </div>
+              <div class="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-300"></div>
+              <div class="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-amber-500 animate-spin">
+              </div>
             </div>
-        </div>
+          </div>
         </div>
       </HomeLayout>
     );
@@ -78,7 +86,7 @@ const User = () => {
   return (
     <HomeLayout>
       <div className="w-screen min-h-screen lg:ml-auto bg-gradient-to-l from-gray-100 via-amber-50 to-gray-100 lg:w-[94%] p-3 lg:p-6 rounded-lg overflow-x-hidden">
-        
+
         <div className="w-full flex flex-col lg:flex-row justify-between items-center  mb-4 lg:mt-8 lg:pr-10 gap-5">
           <div className="mt-5 ">
             <h2 className="text-2xl font-bold text-gray-800">Manage Users</h2>
@@ -147,7 +155,7 @@ const User = () => {
                   <td className="hidden md:table-cell px-4 py-2 text-sm text-gray-600">
                     {it?.user?.email || "N/A"}
                   </td>
-                  <td className="hidden lg:table-cell px-4 py-2 text-sm text-gray-600">
+                  <td className="hidden lg:table-cell px-4 py-2 text-sm text-gray-600 uppercase">
                     {it?.user?.role || "N/A"}
                   </td>
                   <td className="hidden lg:table-cell px-4 py-2">
@@ -179,76 +187,71 @@ const User = () => {
 
         {/* Pagination */}
         {/* Pagination */}
-<div className="mt-4 flex justify-center items-center space-x-1">
-  {/* First and Previous */}
-  <button
-    onClick={() => handlePageChange(1)}
-    disabled={currentPage === 1}
-    className={`px-3 py-1 rounded ${
-      currentPage === 1
-        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-    }`}
-  >
-    &laquo;
-  </button>
-  <button
-    onClick={() => handlePageChange(currentPage - 1)}
-    disabled={currentPage === 1}
-    className={`px-3 py-1 rounded ${
-      currentPage === 1
-        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-    }`}
-  >
-    &lsaquo;
-  </button>
+        <div className="mt-4 flex justify-center items-center space-x-1">
+          {/* First and Previous */}
+          <button
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1}
+            className={`px-3 py-1 rounded ${currentPage === 1
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              }`}
+          >
+            &laquo;
+          </button>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`px-3 py-1 rounded ${currentPage === 1
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              }`}
+          >
+            &lsaquo;
+          </button>
 
-  {/* Page Numbers */}
-  {Array.from({ length: totalPages }, (_, i) => i + 1)
-    .slice(Math.max(0, currentPage - 3), Math.min(currentPage + 2, totalPages))
-    .map((page) => (
-      <button
-        key={page}
-        onClick={() => handlePageChange(page)}
-        className={`px-3 py-1 rounded ${
-          page === currentPage
-            ? "bg-amber-400 text-white"
-            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-        }`}
-      >
-        {page}
-      </button>
-    ))}
+          {/* Page Numbers */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .slice(Math.max(0, currentPage - 3), Math.min(currentPage + 2, totalPages))
+            .map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`px-3 py-1 rounded ${page === currentPage
+                    ? "bg-amber-400 text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+              >
+                {page}
+              </button>
+            ))}
 
-  {/* Next and Last */}
-  <button
-    onClick={() => handlePageChange(currentPage + 1)}
-    disabled={currentPage === totalPages}
-    className={`px-3 py-1 rounded ${
-      currentPage === totalPages
-        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-    }`}
-  >
-    &rsaquo;
-  </button>
-  <button
-    onClick={() => handlePageChange(totalPages)}
-    disabled={currentPage === totalPages}
-    className={`px-3 py-1 rounded ${
-      currentPage === totalPages
-        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-        : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-    }`}
-  >
-    &raquo;
-  </button>
-</div>
+          {/* Next and Last */}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`px-3 py-1 rounded ${currentPage === totalPages
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              }`}
+          >
+            &rsaquo;
+          </button>
+          <button
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage === totalPages}
+            className={`px-3 py-1 rounded ${currentPage === totalPages
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              }`}
+          >
+            &raquo;
+          </button>
+        </div>
 
 
         {/* Add User Modal */}
-        {isModalOpen && <AddUserModal onClose={toggleModal} />}
+        {isModalOpen && <AddUserModal onClose={toggleModal} onUserAdded={onUserAdded} />}
       </div>
     </HomeLayout>
   );

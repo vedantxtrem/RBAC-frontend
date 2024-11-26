@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useUpload } from "../Redux/Slice/UserSlice";
+import { useAddUser, useUpload } from "../Redux/Slice/UserSlice";
+import toast from "react-hot-toast";
 
-const AddUserModal = ({ onClose }) => {
+const AddUserModal = ({ onClose , onUserAdded }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,17 +33,32 @@ const AddUserModal = ({ onClose }) => {
   };
 
   // Handle form submission
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      toast.loading("Adding..");
+      const upload = formData.photo;
+      const response = await dispatch(useUpload(upload));
+      const data = {
+        name: formData.name,
+        email: formData.email,
+        skills: formData.skills,
+        bio: formData.bio,
+        photo: response?.payload?.data?.url,
+      };
 
-    console.log(formData);
-
-    const data = formData.photo
-    const url = await dispatch(useUpload(data));
-    console.log("res",url);
-    
-    // onClose();
+      const res = await dispatch(useAddUser(data));
+      if (res.payload) {
+        toast.dismiss();
+        onUserAdded();
+        onClose();
+      }
+      toast.dismiss()
+    } catch (err) {
+      console.error("Retry add user:", err);
+    }
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
