@@ -9,13 +9,20 @@ import { useLocation } from "react-router-dom";
 import { getUserById, useUpdatePermission  } from "../Redux/Slice/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { GiSkills } from "react-icons/gi";
+import EditProfileModal from "../components/EditProfile";
 
 Chart.register(ArcElement, Tooltip, Legend);
 
 const Profile = () => {
+
     const dispatch = useDispatch();
     const location = useLocation();
-    const { id } = location.state || {};
+    const { id } = location.state || "";
+    const [isModalOpen, setIsModalOpen] = useState(false); 
+
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+      };
 
     const { userOne, loading, error } = useSelector((state) => state.User);
 
@@ -34,6 +41,10 @@ const Profile = () => {
             setPermissions(userOne.permission);
         }
     }, [userOne]);
+
+    const onProfileUpdated = async()=>{
+        await dispatch(getUserById(id));
+    }
 
     const handleTogglePermission = async (key) => {
         if (!permissions) return;
@@ -118,7 +129,7 @@ const Profile = () => {
                 <div className="flex flex-col lg:flex-row gap-6">
                     {/* User Info Card */}
                     <div className="relative flex flex-col lg:flex-row gap-6 w-full bg-white rounded-lg shadow-md p-6">
-                        <div className="absolute hidden md:block md:top-5 md:right-6 text-gray-700 cursor-pointer hover:text-gray-800">
+                        <div onClick={toggleModal } className="absolute hidden md:block md:top-5 md:right-6 text-gray-700 cursor-pointer hover:text-gray-800">
                             <MdEdit size={24} />
                         </div>
                         <img
@@ -128,7 +139,7 @@ const Profile = () => {
                         />
                         <div className="flex flex-col gap-2">
                             <h2 className="relative w-fit text-xl md:text-3xl font-bold">{user.name || "Unnamed User"}
-                                <div className="absolute md:hidden -right-10 top-1 text-gray-700 cursor-pointer hover:text-gray-800">
+                                <div onClick={toggleModal} className="absolute md:hidden -right-10 top-1 text-gray-700 cursor-pointer hover:text-gray-800">
                                     <MdEdit size={20} />
                                 </div>
                             </h2>
@@ -173,6 +184,7 @@ const Profile = () => {
                             <Doughnut data={chartData} options={chartOptions} />
                         </div>
                     </div>
+
                 </div>
 
                 {/* Permission Management */}
@@ -211,6 +223,7 @@ const Profile = () => {
                             </div>
                         ))}
                 </div>
+                {isModalOpen && <EditProfileModal userData={user} onClose={toggleModal} onProfileUpdated={onProfileUpdated} />}
             </div>
         </HomeLayout>
     );

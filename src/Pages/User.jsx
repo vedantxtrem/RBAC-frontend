@@ -192,7 +192,14 @@ const User = () => {
             </tbody>
           </table>
         ) : (
-          <div>No users found.</div>
+          <div className="w-full h-full flex flex-col justify-center items-center  mt-24">
+          <p className="mt-2 text-2xl  text-center">Oops! User will Not exits Type correct name</p>
+          <button
+            // onClick={() => navigate("/")}
+            className="mt-6 px-6 py-2 text-white bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow-lg"
+          >
+            Retry
+          </button></div>
         )}
 
         {/* Pagination */}
@@ -261,7 +268,7 @@ const User = () => {
 
 
         {/* Add User Modal */}
-        {isModalOpen && <AddUserModal onClose={toggleModal} onUserAdded={onUserAdded} />}
+        {isModalOpen && <AddUserModal  onClose={toggleModal} onUserAdded={onUserAdded} />}
       </div>
     </HomeLayout>
   );

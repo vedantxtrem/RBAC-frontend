@@ -38,6 +38,18 @@ export const getUserById = createAsyncThunk(
     }
   }
 );
+export const updateUserById = createAsyncThunk(
+  "user/updateUserById",
+  async ({ id, updatedData }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(`/user/${id}`, updatedData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data || "Unknown error occurred");
+    }
+  }
+);
+
 export const useUpdatePermission = createAsyncThunk(
   "user/updatepermission",
   async ({ id, data }, { rejectWithValue }) => {

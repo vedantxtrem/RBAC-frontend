@@ -1,26 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { updateUserById, useUpload } from "../Redux/Slice/UserSlice";
 import toast from "react-hot-toast";
-import { useAddUser, useUpload } from "../Redux/Slice/UserSlice";
+import { useLocation } from "react-router-dom";
 
-const AddUserModal = ({ onClose , onUserAdded }) => {
+const EditProfileModal = ({ userData, onClose, onProfileUpdated }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    role: "user",
+    status: "active",
     bio: "",
     photo: "",
     skills: "",
   });
 
   const dispatch = useDispatch();
-  
+  const location = useLocation();
+  const { id } = location.state || "";
+
+  useEffect(() => {
+    if (userData) {
+      setFormData((prev) => ({
+        ...prev,
+        name: userData.name || "",
+        email: userData.email || "",
+        role: userData.role || "user",
+        status: userData.status || "active",
+        bio: userData.bio || "",
+        photo: userData.photo || "",
+        skills: Array.isArray(userData.skills) ? userData.skills.join(", ") : "",
+      }));
+    }
+  }, [userData]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle file upload and preview
   const handleImageUpload = (e) => {
     const uploadedImage = e.target.files[0];
     if (uploadedImage) {
@@ -32,49 +51,60 @@ const AddUserModal = ({ onClose , onUserAdded }) => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     try {
-      toast.loading("Adding..");
-      const upload = formData.photo;
-      const response = await dispatch(useUpload(upload));
-      const data = {
-        name: formData.name,
-        email: formData.email,
-        skills: formData.skills,
-        bio: formData.bio,
-        photo: response?.payload?.data?.url,
-      };
-
-      const res = await dispatch(useAddUser(data));
-      if (res.payload) {
-        toast.dismiss() ;
-        onUserAdded();
-        onClose();
+      toast.loading("Updating...");
+  
+      // Handle Image Upload
+      let photoUrl = formData.photo;
+      if (photoUrl && photoUrl.startsWith("data:image")) {
+        const response = await dispatch(useUpload(photoUrl));
+        photoUrl = response?.payload?.data?.url || photoUrl; // Fallback to original if upload fails
       }
-      toast.dismiss()
+  
+      // Prepare Form Data
+      const updatedData = {
+        ...formData,
+        skills: formData.skills.split(",").map((skill) => skill.trim()),
+        photo: photoUrl,
+      };
+  
+      // Dispatch Update Action
+      const res = await dispatch(updateUserById({ id, updatedData }));
+      if (res.payload) {
+        toast.success("Profile updated successfully!");
+        onProfileUpdated();
+        onClose();
+      } else {
+        throw new Error("Update failed");
+      }
     } catch (err) {
-      console.error("Retry add user:", err);
+      console.error("Error updating profile:", err);
+      toast.error(err.message || "Failed to update profile.");
+    } finally {
+      toast.dismiss();
     }
   };
   
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-amber-50 p-6 rounded-lg shadow-lg w-[90%] max-w-lg">
-        <h2 className="text-xl font-bold mb-4 text-center whitespace-nowrap "> Add User</h2>
-        <form onSubmit={handleSubmit} className="space-y-4 w-full flex flex-col justify-center items-center">
+        <h2 className="text-xl font-bold mb-4 text-center">Edit Profile</h2>
+        <form onSubmit={handleSubmit} className="space-y-4 w-full flex flex-col items-center">
           {/* Photo Upload */}
           <div className="w-28 h-28 rounded-full">
-            <label htmlFor="photo" className="cursor-pointer w-full mb-2 text-center ">
+            <label htmlFor="photo" className="cursor-pointer w-full mb-2 text-center">
               {formData.photo ? (
                 <img
                   src={formData.photo}
                   alt="User Preview"
-                  className="w-full h-full  object-cover rounded-full"
+                  className="w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <div className="w-full h-full rounded-full  flex items-center justify-center border border-  ">
+                <div className="w-full h-full rounded-full flex items-center justify-center border border-gray-300">
                   <span className="text-gray-400">Upload Photo</span>
                 </div>
               )}
@@ -111,6 +141,29 @@ const AddUserModal = ({ onClose , onUserAdded }) => {
             required
           />
 
+          {/* Role Dropdown */}
+          <select
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+          >
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+            <option value="subadmin">Sub-Admin</option>
+          </select>
+
+          {/* Status Dropdown */}
+          <select
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+
           {/* Skills Input */}
           <input
             type="text"
@@ -128,11 +181,10 @@ const AddUserModal = ({ onClose , onUserAdded }) => {
             value={formData.bio}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+            maxLength={500}
           />
 
-          
-
-          {/* Action buttons */}
+          {/* Action Buttons */}
           <div className="flex justify-end space-x-4">
             <button
               type="button"
@@ -145,7 +197,7 @@ const AddUserModal = ({ onClose , onUserAdded }) => {
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
             >
-              Add User
+              Save Changes
             </button>
           </div>
         </form>
@@ -154,4 +206,4 @@ const AddUserModal = ({ onClose , onUserAdded }) => {
   );
 };
 
-export default AddUserModal;
+export default EditProfileModal;
