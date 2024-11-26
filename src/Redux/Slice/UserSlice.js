@@ -5,11 +5,11 @@ import axiosInstance from "../../Helper/axiosInstance";
 const initialState = {
   userData: [],
   userOne: null,
-  loading: false, // Track loading state
-  error: null,    // Track errors
+  loading: false,
+  error: null,
 };
 
-// Fetch all user data
+// Thunk to fetch all users
 export const getUserData = createAsyncThunk(
   "user/getUser",
   async (_, { rejectWithValue }) => {
@@ -18,48 +18,53 @@ export const getUserData = createAsyncThunk(
       toast.success("User data fetched successfully");
       return data;
     } catch (error) {
-      toast.error(error?.message || "Failed to fetch user data");
-      return rejectWithValue(error?.response?.data || "Unknown error occurred");
+      const errorMessage = error?.response?.data || "Failed to fetch user data";
+      toast.error(errorMessage);
+      return rejectWithValue(errorMessage);
     }
   }
 );
+
+// Thunk to fetch a single user by ID
 export const getUserById = createAsyncThunk(
   "user/getUserById",
-  async (id) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const data = await axiosInstance.get(`/user/${id}`);
-      toast.success("User data fetched successfully");
-      console.log(data);
-
+      const { data } = await axiosInstance.get(`/user/${id}`);
+      toast.success("User details fetched successfully");
       return data;
     } catch (error) {
-      toast.error(error?.message || "Failed to fetch user data");
-      return rejectWithValue(error?.response?.data || "Unknown error occurred");
+      const errorMessage = error?.response?.data || "Failed to fetch user details";
+      toast.error(errorMessage);
+      return rejectWithValue(errorMessage);
     }
   }
 );
+
+// Thunk to update a user's details
 export const updateUserById = createAsyncThunk(
   "user/updateUserById",
   async ({ id, updatedData }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.put(`/user/${id}`, updatedData);
-      return response.data;
+      const { data } = await axiosInstance.put(`/user/${id}`, updatedData);
+      toast.success("User updated successfully");
+      return data;
     } catch (error) {
-      return rejectWithValue(error?.response?.data || "Unknown error occurred");
+      const errorMessage = error?.response?.data || "Failed to update user details";
+      toast.error(errorMessage);
+      return rejectWithValue(errorMessage);
     }
   }
 );
 
+// Thunk to update a user's permissions
 export const useUpdatePermission = createAsyncThunk(
-  "user/updatepermission",
+  "user/updatePermission",
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      console.log("Calling API with data:", data);
-
-      const res = await axiosInstance.put(`/user/permission/${id}`, data);
-      toast.success("Permission updated successfully");
-
-      return res.data; // Ensure you return only the needed data
+      const { data: updatedData } = await axiosInstance.put(`/user/permission/${id}`, data);
+      toast.success("Permissions updated successfully");
+      return updatedData;
     } catch (error) {
       const errorMessage = error?.response?.data?.message || "Failed to update permissions";
       toast.error(errorMessage);
@@ -68,67 +73,62 @@ export const useUpdatePermission = createAsyncThunk(
   }
 );
 
-
-
-export const useUpload = createAsyncThunk("uploadImage", async (upload) => {
-  try {
-    const res = await axiosInstance.post("/user/upload", {
-      image: upload
-    })
-    // toast.promise(url,{
-    //   loading : "uploading",
-    //   success : "upload succfully",
-    //   error : "failed to upload",
-    // })
-    // return (await res).data;
-    if (!res) {
-      return;
+// Thunk to upload an image
+export const useUpload = createAsyncThunk(
+  "user/uploadImage",
+  async (upload, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.post("/user/upload", { image: upload });
+      toast.success("Image uploaded successfully");
+      return data;
+    } catch (error) {
+      const errorMessage = error?.response?.data || "Failed to upload image";
+      toast.error(errorMessage);
+      return rejectWithValue(errorMessage);
     }
-
-    return res;
-  } catch (error) {
-    toast.error(error.message);
   }
-})
+);
 
-export const useAddUser = createAsyncThunk("addUser", async (data) => {
-  try {
-    const response = axiosInstance.post("/user", data);
-
-    toast.promise(response, {
-      loading: "Adding User",
-      success: "sucess",
-      error: "failed to add user",
-    })
-
-    return (await response)
-  } catch (error) {
-    toast.error(error.message);
+// Thunk to add a new user
+export const useAddUser = createAsyncThunk(
+  "user/addUser",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.post("/user", userData);
+      toast.success("User added successfully");
+      return data;
+    } catch (error) {
+      const errorMessage = error?.response?.data || "Failed to add user";
+      toast.error(errorMessage);
+      return rejectWithValue(errorMessage);
+    }
   }
-})
+);
 
-export const useDeleteUser = createAsyncThunk("delete", async (id) => {
-  try {
-    const res = axiosInstance.delete(`/user/${id}`);
-    toast.promise(res, {
-      loading: "removing user",
-      loading: (res) => res?.payload?.data,
-      error: "error on removing"
-    })
-    console.log(res);
-
-    return (await res)
-  } catch (e) {
-    toast.error(e.message);
+// Thunk to delete a user
+export const useDeleteUser = createAsyncThunk(
+  "user/deleteUser",
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.delete(`/user/${id}`);
+      toast.success("User deleted successfully");
+      return data;
+    } catch (error) {
+      const errorMessage = error?.response?.data || "Failed to delete user";
+      toast.error(errorMessage);
+      return rejectWithValue(errorMessage);
+    }
   }
-})
+);
 
+// User Slice
 const UserSlice = createSlice({
   name: "User",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      // Get All Users
       .addCase(getUserData.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -141,26 +141,67 @@ const UserSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Failed to fetch user data";
       })
-      .addCase(useUpload.fulfilled, (state, action) => {
-        state.loading = false;
-        console.log(action.payload?.data);
-      })
+
+      // Get User by ID
       .addCase(getUserById.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(getUserById.fulfilled, (state, action) => {
         state.loading = false;
-        state.userOne = action.payload?.data || null;
+        state.userOne = action.payload || null;
       })
       .addCase(getUserById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Failed to fetch user data";
+        state.error = action.payload || "Failed to fetch user details";
       })
+
+      // Update User by ID
+      .addCase(updateUserById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userOne = action.payload || null;
+      })
+      .addCase(updateUserById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to update user details";
+      })
+
+      // Update Permissions
       .addCase(useUpdatePermission.fulfilled, (state, action) => {
         state.loading = false;
-        state.userOne = action.payload?.data || null;
+        state.userOne = action.payload || null;
       })
+      .addCase(useUpdatePermission.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to update permissions";
+      })
+
+      // Upload Image
+      .addCase(useUpload.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(useUpload.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to upload image";
+      })
+
+      // Add User
+      .addCase(useAddUser.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(useAddUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to add user";
+      })
+
+      // Delete User
+      .addCase(useDeleteUser.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(useDeleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to delete user";
+      });
   },
 });
 

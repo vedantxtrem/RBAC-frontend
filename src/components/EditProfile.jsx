@@ -195,7 +195,7 @@ const EditProfileModal = ({ userData, onClose, onProfileUpdated }) => {
             </button>
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+              className="bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600"
             >
               Save Changes
             </button>
