@@ -9,7 +9,6 @@ const initialState = {
   error: null,
 };
 
-// Thunk to fetch all users
 export const getUserData = createAsyncThunk(
   "user/getUser",
   async (_, { rejectWithValue }) => {
@@ -25,7 +24,6 @@ export const getUserData = createAsyncThunk(
   }
 );
 
-// Thunk to fetch a single user by ID
 export const getUserById = createAsyncThunk(
   "user/getUserById",
   async (id, { rejectWithValue }) => {
@@ -41,7 +39,6 @@ export const getUserById = createAsyncThunk(
   }
 );
 
-// Thunk to update a user's details
 export const updateUserById = createAsyncThunk(
   "user/updateUserById",
   async ({ id, updatedData }, { rejectWithValue }) => {
@@ -57,7 +54,6 @@ export const updateUserById = createAsyncThunk(
   }
 );
 
-// Thunk to update a user's permissions
 export const useUpdatePermission = createAsyncThunk(
   "user/updatePermission",
   async ({ id, data }, { rejectWithValue }) => {
@@ -73,7 +69,6 @@ export const useUpdatePermission = createAsyncThunk(
   }
 );
 
-// Thunk to upload an image
 export const useUpload = createAsyncThunk(
   "user/uploadImage",
   async (upload, { rejectWithValue }) => {
@@ -89,7 +84,6 @@ export const useUpload = createAsyncThunk(
   }
 );
 
-// Thunk to add a new user
 export const useAddUser = createAsyncThunk(
   "user/addUser",
   async (userData, { rejectWithValue }) => {
@@ -105,7 +99,6 @@ export const useAddUser = createAsyncThunk(
   }
 );
 
-// Thunk to delete a user
 export const useDeleteUser = createAsyncThunk(
   "user/deleteUser",
   async (id, { rejectWithValue }) => {
@@ -121,14 +114,12 @@ export const useDeleteUser = createAsyncThunk(
   }
 );
 
-// User Slice
 const UserSlice = createSlice({
   name: "User",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Get All Users
       .addCase(getUserData.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -142,7 +133,6 @@ const UserSlice = createSlice({
         state.error = action.payload || "Failed to fetch user data";
       })
 
-      // Get User by ID
       .addCase(getUserById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -156,7 +146,6 @@ const UserSlice = createSlice({
         state.error = action.payload || "Failed to fetch user details";
       })
 
-      // Update User by ID
       .addCase(updateUserById.fulfilled, (state, action) => {
         state.loading = false;
         state.userOne = action.payload || null;
@@ -166,7 +155,6 @@ const UserSlice = createSlice({
         state.error = action.payload || "Failed to update user details";
       })
 
-      // Update Permissions
       .addCase(useUpdatePermission.fulfilled, (state, action) => {
         state.loading = false;
         state.userOne = action.payload || null;
@@ -176,7 +164,6 @@ const UserSlice = createSlice({
         state.error = action.payload || "Failed to update permissions";
       })
 
-      // Upload Image
       .addCase(useUpload.fulfilled, (state, action) => {
         state.loading = false;
       })
@@ -185,7 +172,6 @@ const UserSlice = createSlice({
         state.error = action.payload || "Failed to upload image";
       })
 
-      // Add User
       .addCase(useAddUser.fulfilled, (state) => {
         state.loading = false;
       })
@@ -194,7 +180,6 @@ const UserSlice = createSlice({
         state.error = action.payload || "Failed to add user";
       })
 
-      // Delete User
       .addCase(useDeleteUser.fulfilled, (state) => {
         state.loading = false;
       })

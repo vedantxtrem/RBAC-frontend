@@ -77,16 +77,27 @@ const Profile = () => {
     
     
 
-    const chartData = {
-        labels: ["Score", "Total"],
-        datasets: [
-            {
-                data: [70, 30],
-                backgroundColor: ["#facc15", "#e5e7eb"],
-                borderWidth: 0,
-            },
-        ],
-    };
+    const chartData = React.useMemo(() => {
+        if (!permissions) return { labels: [], datasets: [] };
+
+        const permissionValues = Object.values(permissions.permissions || {});
+        const enabledCount = permissionValues.filter((value) => value).length;
+        const disabledCount = permissionValues.length - enabledCount;
+
+        const enabledPercentage = Math.round((enabledCount / permissionValues.length) * 100);
+        const disabledPercentage = 100 - enabledPercentage;
+
+        return {
+            labels: ["Enabled Permissions", "Disabled Permissions"],
+            datasets: [
+                {
+                    data: [enabledPercentage, disabledPercentage],
+                    backgroundColor: ["#facc15", "#e5e7eb"], // Green for enabled, Red for disabled
+                    borderWidth: 0,
+                },
+            ],
+        };
+    }, [permissions]);
 
     const chartOptions = {
         responsive: true,
@@ -100,9 +111,17 @@ const Profile = () => {
                     },
                 },
             },
+            tooltip: {
+                callbacks: {
+                    label: function (tooltipItem) {
+                        const label = chartData.labels[tooltipItem.dataIndex];
+                        const value = chartData.datasets[0].data[tooltipItem.dataIndex];
+                        return `${label}: ${value}%`;
+                    },
+                },
+            },
         },
     };
-
     if (loading) {
         return (
             <HomeLayout>
@@ -179,7 +198,7 @@ const Profile = () => {
 
                     {/* Status Overview */}
                     <div className="w-full lg:w-1/3 bg-white rounded-lg shadow-md p-6">
-                        <h2 className="text-xl font-bold mb-4">Status Overview</h2>
+                        <h2 className="text-xl text-center font-medium mb-4">Percentage Permission Allowed</h2>
                         <div className="relative w-full h-64">
                             <Doughnut data={chartData} options={chartOptions} />
                         </div>
