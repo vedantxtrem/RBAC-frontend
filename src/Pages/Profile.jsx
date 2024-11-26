@@ -8,6 +8,7 @@ import { FaUser } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { getUserById, useUpdatePermission  } from "../Redux/Slice/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { GiSkills } from "react-icons/gi";
 
 Chart.register(ArcElement, Tooltip, Legend);
 
@@ -132,7 +133,9 @@ const Profile = () => {
                                 </div>
                             </h2>
 
-                            <p className="text-gray-500 lg:w-[90%]">{user.bio || "No bio available."}</p>
+                            <p className="text-gray-500 lg:w-[90%] overflow-x-clip">
+                                {user.bio || "No bio available."}
+                            </p>
 
                             <div className="mt-4 flex flex-col gap-2 text-[16px]">
                                 <p className="flex items-center gap-2">
@@ -145,7 +148,11 @@ const Profile = () => {
                                 </p>
                                 <p className="flex items-center gap-2">
                                     <FaUser className="text-amber-400" />
-                                    <span>Role: {user.role || "N/A"}</span>
+                                    <span >Role: <span className="uppercase">{user.role || "N/A"}</span></span>
+                                </p>
+                                <p className="flex items-center gap-2">
+                                    <GiSkills className="text-amber-400" />
+                                    <span className="overflow-x-clip">Skills: {user.skills || "N/A"}</span>
                                 </p>
                                 <p className="flex items-center gap-2">
                                     <MdPhone className="text-amber-400" />
