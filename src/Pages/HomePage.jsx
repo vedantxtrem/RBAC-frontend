@@ -31,17 +31,14 @@ const HomePage = () => {
 
   const dailyUserCount = {};
 
-  // Process user data
   userData.forEach((i) => {
     if (i.user.status === "active") active++;
-    const createdAtDate = format(new Date(i.user.createdAt), "dd/MM"); // Format date to dd/MM
+    const createdAtDate = format(new Date(i.user.createdAt), "dd/MM"); 
     dailyUserCount[createdAtDate] = (dailyUserCount[createdAtDate] || 0) + 1;
   });
 
-  // Generate the last 7 days
   const last7Days = Array.from({ length: 7 }, (_, i) => format(subDays(new Date(), i), "dd/MM")).reverse();
 
-  // Bar chart data for the last 7 days
   const barLabels = last7Days;
   const barValues = barLabels.map((date) => dailyUserCount[date] || 0);
 
@@ -88,10 +85,42 @@ const HomePage = () => {
     ],
   };
 
+  const [todoList, setTodoList] = useState([
+    { id: 1, task: "Prepare Reports", status: "Pending" },
+    { id: 2, task: "Update Team Targets", status: "Done" },
+  ]);
+  const [newTask, setNewTask] = useState("");
+
+  const handleAddTask = () => {
+    if (newTask.trim()) {
+      const newTodo = {
+        id: todoList.length + 1,
+        task: newTask.trim(),
+        status: "Pending",
+      };
+      setTodoList((prev) => [...prev, newTodo]);
+      setNewTask("");
+    }
+  };
+
+  const handleDeleteTask = (id) => {
+    setTodoList((prev) => prev.filter((task) => task.id !== id));
+  };
+
+  const toggleTaskStatus = (id) => {
+    setTodoList((prev) =>
+      prev.map((task) =>
+        task.id === id
+          ? { ...task, status: task.status === "Pending" ? "Done" : "Pending" }
+          : task
+      )
+    );
+  };
+
+
   return (
     <HomeLayout>
       <div className="min-h-screen w-full lg:w-[95%] lg:ml-auto p-4 md:p-6">
-        {/* Header */}
         <div className="flex flex-col lg:flex-row justify-between items-center mb-6">
           <div className="text-center md:text-left mb-4 md:mb-0 pl-10 lg:pl-0">
             <h1 className="text-2xl font-bold text-gray-800">Welcome in, VRV Security</h1>
@@ -105,7 +134,6 @@ const HomePage = () => {
 
         <div className="w-full flex flex-wrap gap-6 px-3 lg:px-0">
 
-          {/* Profile Card */}
           <div className="h-[400px] w-full lg:w-[25%] bg-white rounded-lg shadow p-4 flex flex-col items-center">
             <h3 className="text-xl font-bold  mb-4 text-yellow-400">Admin Profile</h3>
             <img
@@ -115,62 +143,86 @@ const HomePage = () => {
             />
             <h3 className="text-lg font-medium text-gray-800">Vaishnavi Sahu</h3>
             <p className="text-sm text-gray-500 mb-4">Admin/Manger VRV</p>
-            <span className="bg-yellow-500 text-white px-4 py-2 rounded-full font-bold">$1,200</span>
+            <span className="bg-yellow-500 text-white px-4 py-2 rounded-full font-bold">Super Admin</span>
           </div>
 
-          {/* Progress & Charts */}
           <div className="h-[400px] w-full lg:w-[45%] bg-white rounded-lg shadow px-6 py-4">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Weakly User Onboarded</h3>
-            {/* Chart Wrapper */}
             <div className="h-[85%]">
               <Bar
                 data={barData}
                 options={{
                   ...barOptions,
-                  maintainAspectRatio: false, // Allow resizing
+                  maintainAspectRatio: false, 
                 }}
-                height={null} // Let it stretch based on parent height
+                height={null} 
               />
             </div>
           </div>
 
-          {/* Time Tracker */}
           <div className="h-[400px] w-full lg:w-[25%] bg-white rounded-lg shadow p-6 flex flex-col items-center">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">User Status</h3>
-            {/* Doughnut Chart Wrapper */}
             <div className="flex-grow flex items-center justify-center" style={{ height: "280px", width: "280px" }}>
               <Doughnut data={doughnutData} options={{ maintainAspectRatio: false }} />
             </div>
-            {/* Time Display */}
             <div className="mt-6 text-center">
               <p className="text-2xl font-medium text-gray-800">Total User : {" " + totalUser}</p>
             </div>
           </div>
         </div>
 
-        {/* Onboarding Tasks & Calendar */}
-        <div className="w-[97%] flex flex-wrap gap-x-10 mt-6">
-          {/* Onboarding Tasks */}
+        <div className="w-[97%] flex flex-wrap gap-x-10 gap-y-5 px-3 lg:px-0 mt-6">
+
           <div className="w-full flex-1 md:w-[35%] bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Onboarding</h3>
+
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Admin To-Do List</h3>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Interview</span>
-                <span className="text-xs bg-green-200 text-green-800 px-2 py-1 rounded">Done</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Team Meeting</span>
-                <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">Pending</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">HR Policy Review</span>
-                <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">Pending</span>
-              </div>
+              {todoList.map((task) => (
+                <div
+                  key={task.id}
+                  className="flex items-center justify-between bg-gray-100 p-3 rounded-lg shadow-sm"
+                >
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={task.status === "Done"}
+                      onChange={() => toggleTaskStatus(task.id)}
+                      className="mr-3"
+                    />
+                    <span
+                      className={`text-sm ${task.status === "Done" ? "line-through text-gray-400" : "text-gray-600"
+                        }`}
+                    >
+                      {task.task}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => handleDeleteTask(task.id)}
+                    className="text-red-500 text-xs font-bold"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6">
+              <input
+                type="text"
+                placeholder="Add a new task"
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-2"
+              />
+              <button
+                onClick={handleAddTask}
+                className="w-full bg-yellow-500 text-white rounded-lg py-2 text-sm font-semibold"
+              >
+                Add Task
+              </button>
             </div>
           </div>
 
-          {/* Calendar */}
-          <div className="w-full flex-1 md:w-[55%] bg-white rounded-lg shadow p-6">
+          <div className="w-full flex-1 md:w-[55%] bg-white rounded-lg  p-6">
             <Calendar />
           </div>
         </div>

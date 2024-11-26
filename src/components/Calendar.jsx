@@ -4,12 +4,10 @@ import { format, startOfMonth, endOfMonth, startOfWeek, addDays, isSameDay, isTo
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  // Get dates for the current month
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
   const startDate = startOfWeek(monthStart);
 
-  // Handle navigation between months
   const nextMonth = () => {
     setCurrentMonth(addMonths(currentMonth, 1));
   };
@@ -18,7 +16,6 @@ const Calendar = () => {
     setCurrentMonth(subMonths(currentMonth, 1));
   };
 
-  // Generate the days for the calendar
   const generateDays = () => {
     const days = [];
     let day = startDate;
@@ -34,7 +31,7 @@ const Calendar = () => {
   };
 
   return (
-    <div className="col-span-2 bg-white rounded-lg shadow p-6">
+    <div className="col-span-2 bg-white rounded-lg  p-6">
       <div className="flex justify-between items-center mb-4">
         <button onClick={prevMonth} className="text-gray-600">
           &lt;
