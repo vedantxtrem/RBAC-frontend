@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserData } from "../Redux/Slice/UserSlice.js";
+import { getUserData, useDeleteUser } from "../Redux/Slice/UserSlice.js";
 import HomeLayout from "../Layout/HomeLayout.jsx";
 import { FaTrash, FaEye, FaUserPlus } from "react-icons/fa";
 import AddUserModal from "../components/AddUser.jsx";
@@ -58,6 +58,12 @@ const User = () => {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+
+  const onDelete = async(id)=>{
+    const res =  await dispatch(useDeleteUser(id));
+    console.log(res);
+    onUserAdded();
+  }
 
   if (loading) {
     return (
@@ -172,7 +178,7 @@ const User = () => {
                       <button className="text-blue-500 hover:text-blue-700">
                         <FaEye />
                       </button>
-                      <button className="text-red-500 hover:text-red-700">
+                      <button onClick={()=> onDelete( it?.user?._id) } className="text-red-500 hover:text-red-700">
                         <FaTrash />
                       </button>
                     </div>

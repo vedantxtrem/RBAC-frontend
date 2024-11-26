@@ -48,7 +48,7 @@ export const useUpload = createAsyncThunk("uploadImage", async (upload) => {
 export const useAddUser = createAsyncThunk("addUser", async ( data )=>{
   try {
     const response = axiosInstance.post("/user", data );
-    
+
     toast.promise(response,{
       loading : "Adding User",
       success : "sucess",
@@ -58,6 +58,22 @@ export const useAddUser = createAsyncThunk("addUser", async ( data )=>{
     return (await response)
   } catch (error) {
     toast.error(error.message);
+  }
+})
+
+export const useDeleteUser = createAsyncThunk("delete", async (id)=>{
+  try{
+    const res = axiosInstance.delete(`/user/${id}`);
+    toast.promise(res,{
+      loading : "removing user",
+      loading : (res) => res?.payload?.data,
+      error : "error on removing"
+    })
+    console.log(res);
+    
+    return (await res)
+  }catch(e){
+    toast.error(e.message);
   }
 })
 
