@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-hot-toast";
 import axiosInstance from "../../Helper/axiosInstance";
+import axios from "axios";
 
 const initialState = {
   userData: [],
@@ -73,17 +74,25 @@ export const useUpload = createAsyncThunk(
   "user/uploadImage",
   async (upload, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.post("/user/upload", { image: upload });
+      const res = await axiosInstance.post("/upload/generate-presigned-url");
+
+      const { url, upload_preset } = res.data;
+      const formData = new FormData();
+
+      formData.append("file", upload);
+      formData.append("upload_preset", upload_preset);
+      const { data } = await axios.put(url, formData);
+
       toast.success("Image uploaded successfully");
+
       return data;
     } catch (error) {
-      const errorMessage = error?.response?.data || "Failed to upload image";
+      const errorMessage = error?.response?.data?.message || "Failed to upload image";
       toast.error(errorMessage);
       return rejectWithValue(errorMessage);
     }
   }
 );
-
 export const useAddUser = createAsyncThunk(
   "user/addUser",
   async (userData, { rejectWithValue }) => {

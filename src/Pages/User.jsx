@@ -11,12 +11,12 @@ const User = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userData, loading, error } = useSelector((state) => state.User);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false); 
 
 
-  const [searchQuery, setSearchQuery] = useState(""); // For search
-  const [currentPage, setCurrentPage] = useState(1); // For pagination
-  const itemsPerPage = 9; // Number of items per page
+  const [searchQuery, setSearchQuery] = useState(""); 
+  const [currentPage, setCurrentPage] = useState(1); 
+  const itemsPerPage = 9; 
 
   const onUserAdded = async () => {
     await dispatch(getUserData());
@@ -42,12 +42,12 @@ const User = () => {
     setCurrentPage(1);
   }, [searchQuery]);
 
-  // Filtered data based on search query
+ 
   const filteredData = userData.filter((it) =>
     it?.user?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Pagination logic
+  
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const currentData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
@@ -149,26 +149,34 @@ const User = () => {
               {currentData.map((it, index) => (
                 <tr
                   key={index}
-                  onClick={() => navigate("/user/profile",{ state: { id : it?.user?._id } })}
                   className="border-t border-gray-300 hover:bg-gray-100"
                 >
                   <td className="px-4 py-2">
                     <img
+                      onClick={() => navigate("/user/profile",{ state: { id : it?.user?._id } })}
                       src={it?.user?.photo || "https://via.placeholder.com/50"}
                       alt={it?.user?.name}
                       className="w-12 h-12 rounded-full object-cover"
                     />
                   </td>
-                  <td className="px-4 py-2 text-sm font-medium text-gray-800">
+                  <td
+                    onClick={() => navigate("/user/profile",{ state: { id : it?.user?._id } })}
+                    className="px-4 py-2 text-sm font-medium text-gray-800">
                     {it?.user?.name || "N/A"}
                   </td>
-                  <td className="hidden md:table-cell px-4 py-2 text-sm text-gray-600">
+                  <td 
+                    onClick={() => navigate("/user/profile",{ state: { id : it?.user?._id } })}
+                    className="hidden md:table-cell px-4 py-2 text-sm text-gray-600">
                     {it?.user?.email || "N/A"}
                   </td>
-                  <td className="hidden lg:table-cell px-4 py-2 text-sm text-gray-600 uppercase">
+                  <td 
+                    onClick={() => navigate("/user/profile",{ state: { id : it?.user?._id } })}
+                    className="hidden lg:table-cell px-4 py-2 text-sm text-gray-600 uppercase">
                     {it?.user?.role || "N/A"}
                   </td>
-                  <td className="hidden lg:table-cell px-4 py-2">
+                  <td
+                    onClick={() => navigate("/user/profile",{ state: { id : it?.user?._id } })}
+                    className="hidden lg:table-cell px-4 py-2">
                     <span
                       className={`text-xs font-semibold px-2 py-1 rounded ${getStatusClass(
                         it?.user?.status
@@ -182,6 +190,7 @@ const User = () => {
                       <button onClick={() => navigate("/user/profile",{ state: { id : it?.user?._id } })} className="text-blue-500 hover:text-blue-700">
                         <FaEye />
                       </button>
+
                       <button onClick={() => onDelete(it?.user?._id)} className="text-red-500 hover:text-red-700">
                         <FaTrash />
                       </button>

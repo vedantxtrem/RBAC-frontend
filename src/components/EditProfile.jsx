@@ -57,21 +57,19 @@ const EditProfileModal = ({ userData, onClose, onProfileUpdated }) => {
     try {
       toast.loading("Updating...");
   
-      // Handle Image Upload
+      
       let photoUrl = formData.photo;
       if (photoUrl && photoUrl.startsWith("data:image")) {
         const response = await dispatch(useUpload(photoUrl));
-        photoUrl = response?.payload?.data?.url || photoUrl; // Fallback to original if upload fails
+        photoUrl = response?.payload?.secure_url|| photoUrl; 
       }
   
-      // Prepare Form Data
       const updatedData = {
         ...formData,
         skills: formData.skills.split(",").map((skill) => skill.trim()),
         photo: photoUrl,
       };
   
-      // Dispatch Update Action
       const res = await dispatch(updateUserById({ id, updatedData }));
       if (res.payload) {
         toast.success("Profile updated successfully!");

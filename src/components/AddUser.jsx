@@ -39,12 +39,14 @@ const AddUserModal = ({ onClose , onUserAdded }) => {
       toast.loading("Adding..");
       const upload = formData.photo;
       const response = await dispatch(useUpload(upload));
+      console.log(response?.payload?.secure_url);
+      
       const data = {
         name: formData.name,
         email: formData.email,
         skills: formData.skills,
         bio: formData.bio,
-        photo: response?.payload?.data?.url,
+        photo: response?.payload?.secure_url,
       };
 
       const res = await dispatch(useAddUser(data));
