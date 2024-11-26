@@ -149,6 +149,7 @@ const User = () => {
               {currentData.map((it, index) => (
                 <tr
                   key={index}
+                  onClick={() => navigate("/user/profile",{ state: { id : it?.user?._id } })}
                   className="border-t border-gray-300 hover:bg-gray-100"
                 >
                   <td className="px-4 py-2">
@@ -178,7 +179,7 @@ const User = () => {
                   </td>
                   <td className="px-4 py-2">
                     <div className="flex space-x-8">
-                      <button onClick={() => navigate("/user/profile")} className="text-blue-500 hover:text-blue-700">
+                      <button onClick={() => navigate("/user/profile",{ state: { id : it?.user?._id } })} className="text-blue-500 hover:text-blue-700">
                         <FaEye />
                       </button>
                       <button onClick={() => onDelete(it?.user?._id)} className="text-red-500 hover:text-red-700">
