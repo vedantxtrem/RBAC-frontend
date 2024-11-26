@@ -15,12 +15,14 @@ import HomeLayout from "../Layout/HomeLayout";
 import Calendar from "../components/Calendar";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserData } from "../Redux/Slice/UserSlice";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 const HomePage = () => {
   const dispatch = useDispatch();
   const { userData, loading, error } = useSelector((state) => state.User);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getUserData());
@@ -117,7 +119,7 @@ const HomePage = () => {
     );
   };
 
-  
+
   if (loading) {
     return (
       <HomeLayout>
@@ -143,8 +145,8 @@ const HomePage = () => {
             <p className="text-gray-600 text-sm">MANAGE | USER | ROLES | PERMISSION</p>
           </div>
           <div className="flex space-x-4 justify-center">
-            <button className="bg-gray-200 p-2 rounded-full text-gray-600">Settings</button>
-            <button className="bg-gray-200 p-2 rounded-full text-gray-600">Profile</button>
+            {/* <button className="bg-gray-200 p-2 rounded-full text-gray-600">Settings</button> */}
+            <button onClick={()=> navigate("/user")} className="bg-gray-200 p-2 px-4 rounded-full text-gray-600">Profiles</button>
           </div>
         </div>
 
