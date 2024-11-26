@@ -49,7 +49,7 @@ const AddUserModal = ({ onClose , onUserAdded }) => {
 
       const res = await dispatch(useAddUser(data));
       if (res.payload) {
-        toast.dismiss();
+        toast.dismiss() ;
         onUserAdded();
         onClose();
       }

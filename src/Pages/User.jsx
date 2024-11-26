@@ -4,9 +4,12 @@ import { getUserData, useDeleteUser } from "../Redux/Slice/UserSlice.js";
 import HomeLayout from "../Layout/HomeLayout.jsx";
 import { FaTrash, FaEye, FaUserPlus } from "react-icons/fa";
 import AddUserModal from "../components/AddUser.jsx";
+import { BiFilterAlt } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 
 const User = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { userData, loading, error } = useSelector((state) => state.User);
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
 
@@ -38,7 +41,7 @@ const User = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
-  
+
   // Filtered data based on search query
   const filteredData = userData.filter((it) =>
     it?.user?.name?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -59,8 +62,8 @@ const User = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const onDelete = async(id)=>{
-    const res =  await dispatch(useDeleteUser(id));
+  const onDelete = async (id) => {
+    const res = await dispatch(useDeleteUser(id));
     console.log(res);
     onUserAdded();
   }
@@ -175,10 +178,10 @@ const User = () => {
                   </td>
                   <td className="px-4 py-2">
                     <div className="flex space-x-8">
-                      <button className="text-blue-500 hover:text-blue-700">
+                      <button onClick={() => navigate("/user/profile")} className="text-blue-500 hover:text-blue-700">
                         <FaEye />
                       </button>
-                      <button onClick={()=> onDelete( it?.user?._id) } className="text-red-500 hover:text-red-700">
+                      <button onClick={() => onDelete(it?.user?._id)} className="text-red-500 hover:text-red-700">
                         <FaTrash />
                       </button>
                     </div>
@@ -199,8 +202,8 @@ const User = () => {
             onClick={() => handlePageChange(1)}
             disabled={currentPage === 1}
             className={`px-3 py-1 rounded ${currentPage === 1
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-gray-300 text-gray-700 hover:bg-gray-400"
               }`}
           >
             &laquo;
@@ -209,8 +212,8 @@ const User = () => {
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
             className={`px-3 py-1 rounded ${currentPage === 1
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-gray-300 text-gray-700 hover:bg-gray-400"
               }`}
           >
             &lsaquo;
@@ -224,8 +227,8 @@ const User = () => {
                 key={page}
                 onClick={() => handlePageChange(page)}
                 className={`px-3 py-1 rounded ${page === currentPage
-                    ? "bg-amber-400 text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  ? "bg-amber-400 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                   }`}
               >
                 {page}
@@ -237,8 +240,8 @@ const User = () => {
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
             className={`px-3 py-1 rounded ${currentPage === totalPages
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-gray-300 text-gray-700 hover:bg-gray-400"
               }`}
           >
             &rsaquo;
@@ -247,8 +250,8 @@ const User = () => {
             onClick={() => handlePageChange(totalPages)}
             disabled={currentPage === totalPages}
             className={`px-3 py-1 rounded ${currentPage === totalPages
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-gray-300 text-gray-700 hover:bg-gray-400"
               }`}
           >
             &raquo;
