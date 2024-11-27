@@ -25,13 +25,7 @@ This repository contains the frontend code for a **Role-Based Access Control (RB
 ```
 2. Setup Environment Variables
 ```
-    MONGODB_URI=mongodb+srv://<username>:<password>@(link unavailable)
-
-    CLOUDINARY_NAME=your-cloudinary-name
-
-    CAPIKEY=your-cloudinary-api-key
-
-    CSECRET=your-cloudinary-api-secret
+    VITE_API_BASE_URL="http://localhost:5000/api/v1/"
 ```
 3. Install dependecies 
 ```
